@@ -4,21 +4,6 @@ from django.db import models
 User = get_user_model()
 
 
-class CourtStatus(models.Model):
-    code = models.CharField('Код', max_length=16, primary_key=True)
-    name = models.CharField('Название', max_length=32)
-    sort = models.PositiveSmallIntegerField('Сортировка', null=True, blank=True)
-    is_booked = models.BooleanField('Забукован', default=True)
-
-    class Meta:
-        verbose_name = 'Статус корта'
-        verbose_name_plural = 'Статусы кортов'
-        ordering = ('sort',)
-
-    def __str__(self):
-        return f'{self.code} для {self.name})'
-
-
 class Court(models.Model):
     group = models.ForeignKey(
         'practices.Group', models.CASCADE, 'courts',
