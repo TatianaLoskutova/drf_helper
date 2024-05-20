@@ -10,9 +10,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Run the entrypoint script
-      shell: /bin/bash --noprofile --norc -e -o pipefail {0}
-      run: ./entrypoint.sh
     - name: executing remote ssh commands to deploy
       uses: appleboy/ssh-action@master
       with:
@@ -22,17 +19,10 @@ jobs:
         script: |
           # Выполняет деплой
           cd ${{ secrets.PATH }}
-          /bin/bash -c "source venv/bin/activate"
-          /bin/bash -c "git pull"
-          /bin/bash -c "pip install -r requirements.txt"
-          /bin/bash -c "python manage.py makemigrations"
-          /bin/bash -c "python manage.py migrate"
-          /bin/bash -c "sudo service ${{ secrets.GUNICORN }} restart"
-          /bin/bash -c "sudo service nginx restart"
-          # source venv/bin/activate
-          # git pull
-          # pip install -r requirements.txt
-          # python manage.py makemigrations
-          # python manage.py migrate
-          # sudo service ${{ secrets.GUNICORN }} restart
-          # sudo service nginx restart
+          source venv/bin/activate
+          git pull
+          pip install -r requirements.txt
+          python manage.py makemigrations
+          python manage.py migrate
+          sudo service ${{ secrets.GUNICORN }} restart
+          sudo service nginx restart
