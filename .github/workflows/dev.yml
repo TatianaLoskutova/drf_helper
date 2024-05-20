@@ -18,13 +18,13 @@ jobs:
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
           # Выполняет деплой
-          /bin/bash -c "source venv/bin/activate"
-          /bin/bash -c "git pull"
-          /bin/bash -c "pip install -r requirements.txt"
-          /bin/bash -c "python manage.py makemigrations"
-          /bin/bash -c "python manage.py migrate"
-          /bin/bash -c "sudo service ${{ secrets.GUNICORN }} restart"
-          /bin/bash -c "sudo service nginx restart"
+          usr/bin/bash -c "source venv/bin/activate"
+          usr/bin/bash -c "git pull"
+          usr/bin/bash -c "pip install -r requirements.txt"
+          usr/bin/bash -c "python manage.py makemigrations"
+          usr/bin/bash -c "python manage.py migrate"
+          usr/bin/bash -c "sudo service ${{ secrets.GUNICORN }} restart"
+          usr/bin/bash -c "sudo service nginx restart"
           # cd ${{ secrets.PATH }}
           # source venv/bin/activate
           # git pull
