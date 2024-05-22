@@ -168,7 +168,6 @@ SPECTACULAR_SETTINGS = {
         'rest_framework.permissions.IsAuthenticated',
     ],
     'SERVE_AUTHENTICATION': [
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ],
     'SWAGGER_UI_SETTINGS': {
