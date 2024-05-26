@@ -2,10 +2,12 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
+from common.models.mixins import InfoMixin
+
 User = get_user_model()
 
 
-class Group(models.Model):
+class Group(InfoMixin):
     club = models.ForeignKey(
         'Club', models.CASCADE, 'groups',
         verbose_name='Теннисный клуб',
@@ -18,14 +20,6 @@ class Group(models.Model):
     members = models.ManyToManyField(
         User, 'groups_members', verbose_name='Участники групп',
         blank=True, through='Member',
-    )
-    min_active_players = models.PositiveSmallIntegerField(
-        'Минимальное количество активных игроков', blank=True, null=True,
-    )
-    training_start = models.TimeField('Начало тренировки', blank=True, null=True,)
-    training_end = models.TimeField('Окончание тренировки', blank=True, null=True,)
-    training_max_duration = models.PositiveSmallIntegerField(
-        'Максимальная длительность тренировки', blank=True, null=True,
     )
 
     class Meta:
