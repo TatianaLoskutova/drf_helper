@@ -1,61 +1,30 @@
 from django.contrib import admin
 from django.contrib.admin import TabularInline
-from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
 
-from practices.models import clubs, courts, dicts, groups, trainings
+from practices.models import courts, dicts, trainings
 
 
 #######################
 # INLINES
 #######################
-
-
 class CourtPlayerInline(TabularInline):
     model = courts.CourtPlayer
     fields = ('player', 'status')
 
+
 #######################
 # MODELS
 #######################
-
-
-@admin.register(clubs.Club)
-class ClubAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'director',)
-    filter_horizontal = ('players',)
-
-
-@admin.register(groups.Group)
-class GroupAdmin(admin.ModelAdmin):
-    list_display = (
-        'id', 'name', 'trainer', 'min_active_players',
-        'court_count',
-    )
-    list_display_links = ('id', 'name',)
-    search_fields = ('name',)
-
-    def court_count(self, obj):
-        return obj.court_count
-
-    court_count.short_description = 'Кол-во кортов'
-
-    def get_queryset(self, request):
-        queryset = groups.Group.objects.annotate(
-            court_count=Count('courts__id')
-        )
-        return queryset
-
-
 @admin.register(dicts.CourtStatus)
 class CourtStatusAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name', 'sort', 'is_booked',)
+    list_display = ('code', 'name', 'sort', 'is_active',)
 
 
 @admin.register(dicts.TrainingStatus)
 class TrainingStatusAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name', 'sort', 'is_booked',)
+    list_display = ('code', 'name', 'sort', 'is_active',)
 
 
 @admin.register(courts.Court)
@@ -64,7 +33,6 @@ class CourtAdmin(admin.ModelAdmin):
         'id', 'group', 'date', 'training_start', 'training_end',
         'training_max_duration',
     )
-    autocomplete_fields = ('group',)
     inlines = (
         CourtPlayerInline,
     )

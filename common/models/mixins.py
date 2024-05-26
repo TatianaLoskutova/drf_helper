@@ -8,7 +8,7 @@ class BaseDictModelMixin(models.Model):
     code = models.CharField('Код', max_length=16, primary_key=True)
     name = models.CharField('Название', max_length=32)
     sort = models.PositiveSmallIntegerField('Сортировка', null=True, blank=True)
-    is_booked = models.BooleanField('Забукован', default=True)
+    is_active = models.BooleanField('Доступно', default=True)
 
     class Meta:
         ordering = ('sort',)
