@@ -17,6 +17,7 @@ jobs:
         username: ${{ secrets.SERVER_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         script: |
+          #!/usr/bin/bash
           cd ${{ secrets.PATH }}
           source venv/bin/activate
           git pull
