@@ -25,3 +25,4 @@ jobs:
           python manage.py migrate
           sudo service ${{ secrets.GUNICORN }} restart
           sudo service nginx restart
+        shell: /bin/bash

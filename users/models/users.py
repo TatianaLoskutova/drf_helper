@@ -17,6 +17,11 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
+
+    is_corporate_account = models.BooleanField(
+        'Корпоративный аккаунт', default=False,
+    )
+
     objects = CustomUserManager()
 
     class Meta:

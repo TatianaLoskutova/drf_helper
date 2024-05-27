@@ -103,6 +103,15 @@ class MeUpdateSerializer(serializers.ModelSerializer):
             'profile',
         )
 
+    def validate(self, attrs):
+        user = self.instance
+        if user.is_corporate_account:
+            raise ParseError(
+                'У вас корпоративный аккаунт. '
+                'Обратитесь к администратору для изменений данных профиля.'
+            )
+        return attrs
+
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile') if 'profile' in validated_data else None
 
