@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
+from users.permissions import IsNotCorporate
 from users.serializers.api import users as user_s
 
 User = get_user_model()
@@ -47,6 +48,7 @@ class ChangePasswordView(APIView):
     patch=extend_schema(summary='Изменить частично профиль пользователя', tags=['Пользователи']),
 )
 class MeView(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsNotCorporate]
     queryset = User.objects.all()
     serializer_class = user_s.MeSerializer
     http_method_names = ('get', 'patch')

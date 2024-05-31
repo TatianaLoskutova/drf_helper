@@ -113,12 +113,18 @@ class MeUpdateSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile') if 'profile' in validated_data else None
+        profile_data = (
+            validated_data.pop('profile')
+            if 'profile' in validated_data else None
+        )
 
         with transaction.atomic():
             instance = super().update(instance, validated_data)
-
-            self._update_profile(profile=instance.profile, data=profile_data)
+            
+            if profile_data:
+                self._update_profile(
+                    profile=instance.profile, data=profile_data
+                )
         return instance
 
     def _update_profile(self, profile, data):
