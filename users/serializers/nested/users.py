@@ -8,7 +8,5 @@ class UserShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = User  # тут под вопросом
         fields = (
-            'id', 'username',
+            'id', 'username', 'full_name',
         )
-
-

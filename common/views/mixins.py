@@ -4,9 +4,6 @@ from rest_framework.viewsets import GenericViewSet
 from common.serializers.mixins import DictMixinSerializer
 
 
-# from common.serializers.mixins import DictMixinSerializer
-
-
 class ExtendedGenericViewSet(GenericViewSet):
     pass
 

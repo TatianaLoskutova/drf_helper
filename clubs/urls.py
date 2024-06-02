@@ -1,12 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from clubs.views import dicts, clubs
+from clubs.views import dicts, clubs, players
 
 router = DefaultRouter()
 
 router.register(r'dicts/positions', dicts.PositionView, 'positions')
 router.register(r'search', clubs.ClubSearchView, 'clubs-search')
+router.register(r'manage', clubs.ClubView, 'clubs')
+router.register(r'manage/(?P<pk>\d+)/players', players.PlayerView, 'players')
 
 urlpatterns = [
     path('clubs/', include(router.urls)),

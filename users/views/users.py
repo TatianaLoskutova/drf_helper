@@ -6,8 +6,10 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_204_NO_CONTENT
 from rest_framework.views import APIView
 
+from common.views.mixins import ListViewSet
 from users.permissions import IsNotCorporate
 from users.serializers.api import users as user_s
+from users.serializers.api.users import UserSearchListSerializer
 
 User = get_user_model()
 
@@ -60,3 +62,12 @@ class MeView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+@extend_schema_view(
+    list=extend_schema(summary='Список пользователей Search', tags=['Словари']),
+)
+class UserListSearchView(ListViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSearchListSerializer
+

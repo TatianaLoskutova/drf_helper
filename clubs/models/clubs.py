@@ -46,4 +46,4 @@ class Player(models.Model):
         unique_together = (('club', 'user'),)
 
     def __str__(self):
-        return f'Employee {self.user}'
+        return f'Player {self.user}'
