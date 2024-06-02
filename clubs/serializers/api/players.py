@@ -1,27 +1,43 @@
-import pdb
-
 from crum import get_current_user
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from rest_framework.exceptions import ParseError
 from rest_framework import serializers
+from rest_framework.exceptions import ParseError
 
 from clubs.models.clubs import Club, Player
+from clubs.serializers.nested.dicts import PositionShortSerializer
 from common.serializers.mixins import ExtendedModelSerializer
+from users.serializers.nested.users import UserPlayerSerializer
 
 User = get_user_model()
 
 
 class PlayerListSerializer(ExtendedModelSerializer):
+    user = UserPlayerSerializer()
+    position = PositionShortSerializer()
+
     class Meta:
         model = Player
-        fields = '__all__'
+        fields = (
+            'id',
+            'date_joined',
+            'user',
+            'position',
+        )
 
 
 class PlayerRetrieveSerializer(ExtendedModelSerializer):
+    user = UserPlayerSerializer()
+    position = PositionShortSerializer()
+
     class Meta:
         model = Player
-        fields = '__all__'
+        fields = (
+            'id',
+            'date_joined',
+            'user',
+            'position',
+        )
 
 
 class PlayerCreateSerializer(ExtendedModelSerializer):
@@ -70,9 +86,6 @@ class PlayerCreateSerializer(ExtendedModelSerializer):
             validated_data['user'] = user
             instance = super().create(validated_data)
         return instance
-
-    # def to_representation(self, instance):
-    #     return PlayerRetrieveSerializer(instance, context=self.context).data
 
 
 class PlayerUpdateSerializer(ExtendedModelSerializer):

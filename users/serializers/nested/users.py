@@ -10,3 +10,17 @@ class UserShortSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'username', 'full_name',
         )
+
+
+class UserPlayerSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'full_name',
+            'email',
+            'phone_number',
+            'is_corporate_account',
+        )

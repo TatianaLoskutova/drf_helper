@@ -1,8 +1,12 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
+from clubs.backends import OwnedByClub
+from clubs.filters import PlayerFilter
 from clubs.models.clubs import Player
+from clubs.permissions import IsColleagues
 from clubs.serializers.api import players as players_s
 from common.views.mixins import CRUDViewSet
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 
 @extend_schema_view(
@@ -16,22 +20,32 @@ from common.views.mixins import CRUDViewSet
 class PlayerView(CRUDViewSet):
     queryset = Player.objects.all()
     serializer_class = players_s.PlayerListSerializer
+    permission_classes = [IsColleagues]
+
+    multi_serializer_class = {
+        'list': players_s.PlayerListSerializer,
+        'retrieve': players_s.PlayerRetrieveSerializer,
+        'create': players_s.PlayerCreateSerializer,
+        'update': players_s.PlayerUpdateSerializer,
+        'partial_update': players_s.PlayerUpdateSerializer,
+    }
 
     lookup_url_kwarg = 'player_id'
+    http_method_names = ('get', 'post', 'patch', 'delete',)
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return players_s.PlayerRetrieveSerializer
-        elif self.action == 'create':
-            return players_s.PlayerCreateSerializer
-        elif self.action == 'update':
-            return players_s.PlayerUpdateSerializer
-        elif self.action == 'partial_update':
-            return players_s.PlayerUpdateSerializer
-
-        return self.serializer_class
+    filter_backends = (
+        OrderingFilter,
+        SearchFilter,
+        OwnedByClub,
+    )
+    filterset_class = PlayerFilter
+    ordering = ('position', 'date_joined', 'id',)
 
     def get_queryset(self):
-        club_id = self.request.parser_context['kwargs'].get('pk')
-        queryset = Player.objects.filter(club_id=club_id)
-        return queryset
+        qs = Player.objects.select_related(
+            'user',
+            'position',
+        ).prefetch_related(
+            'club',
+        )
+        return qs

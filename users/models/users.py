@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -40,3 +40,9 @@ class User(AbstractUser):
 def post_save_user(sender, instance, created, **kwargs):
     if not hasattr(instance, 'profile'):
         Profile.objects.create(user=instance)
+
+
+# Adding properties to Group model
+# Group.add_to_class(
+#     'code', models.CharField('Code', max_length=32, null=True, unique=True)
+# )

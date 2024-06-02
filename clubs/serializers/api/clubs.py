@@ -1,11 +1,9 @@
-import pdb
-
-from crum import get_current_user
 from django.contrib.auth import get_user_model
-from rest_framework.exceptions import ParseError
+from rest_framework import serializers
 
 from clubs.models.clubs import Club
-from common.serializers.mixins import ExtendedModelSerializer
+from common.serializers.mixins import ExtendedModelSerializer, \
+    InfoModelSerializer
 from users.serializers.nested.users import UserShortSerializer
 
 User = get_user_model()
@@ -23,20 +21,42 @@ class ClubSearchListSerializer(ExtendedModelSerializer):
         )
 
 
-class ClubListSerializer(ExtendedModelSerializer):
+class ClubListSerializer(InfoModelSerializer):
     director = UserShortSerializer()
+    pax = serializers.IntegerField()
+    groups_count = serializers.IntegerField()
+    can_manage = serializers.BooleanField()
 
     class Meta:
         model = Club
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'director',
+            'pax',
+            'groups_count',
+            'created_at',
+            'can_manage',
+        )
 
 
-class ClubRetrieveSerializer(ExtendedModelSerializer):
+class ClubRetrieveSerializer(InfoModelSerializer):
     director = UserShortSerializer()
+    pax = serializers.IntegerField()
+    groups_count = serializers.IntegerField()
+    can_manage = serializers.BooleanField()
 
     class Meta:
         model = Club
-        fields = '__all__'
+        fields = (
+            'id',
+            'name',
+            'director',
+            'pax',
+            'groups_count',
+            'created_at',
+            'can_manage',
+        )
 
 
 class ClubCreateSerializer(ExtendedModelSerializer):

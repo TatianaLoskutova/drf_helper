@@ -21,7 +21,7 @@ class Club(InfoMixin):
     class Meta:
         verbose_name = 'Теннисный клуб'
         verbose_name_plural = 'Теннисные клубы'
-        ordering = ('name',)
+        ordering = ('name', 'id',)
 
     def __str__(self):
         return f'{self.name} ({self.pk})'
@@ -46,4 +46,4 @@ class Player(models.Model):
         unique_together = (('club', 'user'),)
 
     def __str__(self):
-        return f'Player {self.user}'
+        return f'Player #{self.pk} {self.user}'

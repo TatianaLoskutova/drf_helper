@@ -14,7 +14,7 @@ class PlayerInline(admin.TabularInline):
 
 class MemberInline(admin.TabularInline):
     model = groups.Member
-    fields = ('user', 'date_joined')
+    fields = ('player', 'date_joined')
 
 
 class ProfileTrainingInline(admin.StackedInline):

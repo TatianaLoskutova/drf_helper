@@ -14,11 +14,11 @@ class Group(InfoMixin):
     )
     name = models.CharField('Название', max_length=255)
     trainer = models.ForeignKey(
-        User, models.RESTRICT, 'groups_trainers',
+        'Player', models.RESTRICT, 'groups_trainers',
         verbose_name='Тренер',
     )
     members = models.ManyToManyField(
-        User, 'groups_members', verbose_name='Участники групп',
+        'Player', 'groups_members', verbose_name='Игроки групп',
         blank=True, through='Member',
     )
 
@@ -35,8 +35,8 @@ class Member(models.Model):
     group = models.ForeignKey(
         'Group', models.CASCADE, 'members_info',
     )
-    user = models.ForeignKey(
-        User, models.CASCADE, 'groups_info',
+    player = models.ForeignKey(
+        'Player', models.CASCADE, 'groups_info',
     )
     date_joined = models.DateField('Date joined', default=timezone.now)
 
@@ -44,7 +44,7 @@ class Member(models.Model):
         verbose_name = 'Участник группы'
         verbose_name_plural = 'Участники групп'
         ordering = ('-date_joined',)
-        unique_together = (('group', 'user'),)
+        unique_together = (('group', 'player'),)
 
     def __str__(self):
-        return f'Member {self.user}'
+        return f'Member {self.player}'
