@@ -1,4 +1,7 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 from clubs.backends import OwnedByClub
 from clubs.filters import PlayerFilter
@@ -6,9 +9,7 @@ from clubs.models.clubs import Player
 from clubs.permissions import IsColleagues
 from clubs.serializers.api import players as players_s
 from common.views.mixins import CRUDViewSet
-from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.filters import SearchFilter, OrderingFilter, \
-    BaseFilterBackend
+
 
 @extend_schema_view(
     list=extend_schema(summary='Список игроков клуба', tags=['Теннисные клубы: Игроки']),
@@ -17,6 +18,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter, \
     update=extend_schema(summary='Изменить игрока клуба', tags=['Теннисные клубы: Игроки']),
     partial_update=extend_schema(summary='Частично изменить игрока клуба', tags=['Теннисные клубы: Игроки']),
     destroy=extend_schema(summary='Удалить игрока из клуба', tags=['Теннисные клубы: Игроки']),
+    search=extend_schema(filters=True, summary='Список игроков клуба Search',tags=['Словари']),
 )
 class PlayerView(CRUDViewSet):
     permission_classes = [IsColleagues]
@@ -30,13 +32,15 @@ class PlayerView(CRUDViewSet):
         'create': players_s.PlayerCreateSerializer,
         'update': players_s.PlayerUpdateSerializer,
         'partial_update': players_s.PlayerUpdateSerializer,
+        'search': players_s.PlayerSearchSerializer,
+        'destroy': players_s.PlayerDeleteSerializer,
     }
 
     lookup_url_kwarg = 'player_id'
     http_method_names = ('get', 'post', 'patch', 'delete',)
 
     filter_backends = (
-        BaseFilterBackend,
+        DjangoFilterBackend,
         OrderingFilter,
         SearchFilter,
         OwnedByClub,
@@ -52,3 +56,13 @@ class PlayerView(CRUDViewSet):
             'club',
         )
         return qs
+
+    @action(methods=['GET'], detail=False, url_path='search')
+    def search(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=dict())
+        serializer.is_valid(raise_exception=True)
+        return super().destroy(request, *args, **kwargs)
