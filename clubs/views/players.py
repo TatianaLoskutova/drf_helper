@@ -7,7 +7,8 @@ from clubs.permissions import IsColleagues
 from clubs.serializers.api import players as players_s
 from common.views.mixins import CRUDViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
-
+from rest_framework.filters import SearchFilter, OrderingFilter, \
+    BaseFilterBackend
 
 @extend_schema_view(
     list=extend_schema(summary='Список игроков клуба', tags=['Теннисные клубы: Игроки']),
@@ -15,12 +16,13 @@ from rest_framework.filters import OrderingFilter, SearchFilter
     create=extend_schema(summary='Создать игрока клуба', tags=['Теннисные клубы: Игроки']),
     update=extend_schema(summary='Изменить игрока клуба', tags=['Теннисные клубы: Игроки']),
     partial_update=extend_schema(summary='Частично изменить игрока клуба', tags=['Теннисные клубы: Игроки']),
-    destroy=extend_schema(summary='Удалить игрока клуба', tags=['Теннисные клубы: Игроки']),
+    destroy=extend_schema(summary='Удалить игрока из клуба', tags=['Теннисные клубы: Игроки']),
 )
 class PlayerView(CRUDViewSet):
+    permission_classes = [IsColleagues]
     queryset = Player.objects.all()
     serializer_class = players_s.PlayerListSerializer
-    permission_classes = [IsColleagues]
+
 
     multi_serializer_class = {
         'list': players_s.PlayerListSerializer,
@@ -34,6 +36,7 @@ class PlayerView(CRUDViewSet):
     http_method_names = ('get', 'post', 'patch', 'delete',)
 
     filter_backends = (
+        BaseFilterBackend,
         OrderingFilter,
         SearchFilter,
         OwnedByClub,

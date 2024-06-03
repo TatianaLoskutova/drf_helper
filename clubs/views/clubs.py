@@ -47,8 +47,6 @@ class ClubView(CRUViewSet):
         DjangoFilterBackend,
         MyClub,
     )
-
-    search_fields = ('name',)
     filterset_class = ClubFilter
     ordering = ('name', 'id',)
 

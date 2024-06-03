@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
+from clubs.constants import DIRECTOR_POSITION, TRAINER_POSITION, \
+    PLAYER_POSITION
 from common.models.mixins import InfoMixin
 
 User = get_user_model()
@@ -26,6 +28,13 @@ class Club(InfoMixin):
     def __str__(self):
         return f'{self.name} ({self.pk})'
 
+    @property
+    def director_player(self):
+        obj, create = self.players_info.get_or_create(
+            position_id=DIRECTOR_POSITION, defaults={'user': self.director, }
+        )
+        return obj
+
 
 class Player(models.Model):
     club = models.ForeignKey(
@@ -47,3 +56,21 @@ class Player(models.Model):
 
     def __str__(self):
         return f'Player #{self.pk} {self.user}'
+
+    @property
+    def is_director(self):
+        if self.position_id == DIRECTOR_POSITION:
+            return True
+        return False
+
+    @property
+    def is_trainer(self):
+        if self.position_id == TRAINER_POSITION:
+            return True
+        return False
+
+    @property
+    def is_player(self):
+        if self.position_id == PLAYER_POSITION:
+            return True
+        return False

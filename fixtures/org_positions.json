@@ -1,0 +1,1 @@
+[{"model": "clubs.position", "pk": "director", "fields": {"name": "Руководитель", "sort": 100, "is_active": false}}, {"model": "clubs.position", "pk": "trainer", "fields": {"name": "Тренер", "sort": 30, "is_active": true}}, {"model": "clubs.position", "pk": "player", "fields": {"name": "Игрок", "sort": 20, "is_active": true}}]

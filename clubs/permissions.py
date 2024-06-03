@@ -6,7 +6,7 @@ class IsMyClub(BasePermission):
         if obj.director == request.user:
             return True
 
-        if request.method not in SAFE_METHODS:
+        if request.method in SAFE_METHODS:
             return obj.players.all(user=request.user).exists()
 
         return False
@@ -27,7 +27,7 @@ class IsMyGroup(BasePermission):
         if obj.club.director == request.user:
             return True
 
-        if request.method not in SAFE_METHODS:
+        if request.method in SAFE_METHODS:
             return obj.club.players.all(user=request.user).exists()
 
         return False
