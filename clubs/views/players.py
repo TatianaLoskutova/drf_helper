@@ -9,6 +9,8 @@ from clubs.models.clubs import Player
 from clubs.permissions import IsColleagues
 from clubs.serializers.api import players as players_s
 from common.views.mixins import CRUDViewSet
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 @extend_schema_view(

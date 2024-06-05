@@ -77,6 +77,12 @@ class DictListMixin(ListViewSet):
     pagination_class = None
     model = None
 
+    def get_queryset(self):
+        assert self.model, (
+            '"%s" should either include attribute `model`' % self.__class__.__name__
+        )
+        return self.model.objects.filter(is_active=True)
+
 
 class CRUViewSet(ExtendedGenericViewSet,
                  mixins.CreateModelMixin,
@@ -88,4 +94,11 @@ class CRUViewSet(ExtendedGenericViewSet,
 
 class CRUDViewSet(CRUViewSet,
                   mixins.DestroyModelMixin,):
+    pass
+
+
+class ListCreateUpdateViewSet(ExtendedGenericViewSet,
+                              mixins.ListModelMixin,
+                              mixins.CreateModelMixin,
+                              mixins.UpdateModelMixin,):
     pass

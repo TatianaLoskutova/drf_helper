@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
@@ -9,7 +10,6 @@ from rest_framework.views import APIView
 from common.views.mixins import ListViewSet
 from users.permissions import IsNotCorporate
 from users.serializers.api import users as user_s
-from users.serializers.api.users import UserSearchListSerializer
 
 User = get_user_model()
 
@@ -68,6 +68,7 @@ class MeView(generics.RetrieveUpdateAPIView):
     list=extend_schema(summary='Список пользователей Search', tags=['Словари']),
 )
 class UserListSearchView(ListViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSearchListSerializer
-
+    queryset = User.objects.exclude(
+        Q(is_superuser=True) | Q(is_corporate_account=True)
+    )
+    serializer_class = user_s.UserSearchListSerializer
