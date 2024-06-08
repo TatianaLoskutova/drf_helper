@@ -1,39 +1,40 @@
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework.permissions import BasePermission, IsAuthenticated, \
+    SAFE_METHODS
 
 
-class IsMyClub(BasePermission):
+class IsMyClub(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.director == request.user:
             return True
 
         if request.method in SAFE_METHODS:
-            return obj.players.all(user=request.user).exists()
+            return request.user in obj.players.all()
 
         return False
 
 
-class IsColleagues(BasePermission):
+class IsColleagues(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.club.director == request.user:
             return True
 
         if request.method in SAFE_METHODS:
-            return obj.club.players.all(user=request.user).exists()
+            return request.user in obj.club.players.all()
         return False
 
 
-class IsMyGroup(BasePermission):
+class IsMyGroup(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.club.director == request.user:
             return True
 
         if request.method in SAFE_METHODS:
-            return obj.club.players.all(user=request.user).exists()
+            return request.user in obj.club.players.all()
 
         return False
 
 
-class IsOfferTrainer(BasePermission):
+class IsOfferTrainer(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.club.director == request.user:
             return True

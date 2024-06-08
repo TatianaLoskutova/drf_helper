@@ -1,21 +1,21 @@
+from crum import get_current_user
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import ParseError
 
+from clubs.models.clubs import Club
+from clubs.models.groups import Group
 from clubs.serializers.nested.clubs import ClubShortSerializer
 from common.serializers.mixins import ExtendedModelSerializer, \
     InfoModelSerializer
-from clubs.models.groups import Group
 from users.serializers.nested.users import UserShortSerializer
-from crum import get_current_user
-from rest_framework.exceptions import ParseError
-from clubs.models.clubs import Club
-
 
 User = get_user_model()
 
 
 class GroupListSerializer(InfoModelSerializer):
     club = ClubShortSerializer()
+    trainer = UserShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -25,6 +25,7 @@ class GroupListSerializer(InfoModelSerializer):
         fields = (
             'id',
             'name',
+            'trainer',
             'club',
             'pax',
             'created_at',
@@ -35,6 +36,7 @@ class GroupListSerializer(InfoModelSerializer):
 
 class GroupRetrieveSerializer(InfoModelSerializer):
     club = ClubShortSerializer()
+    trainer = UserShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -45,6 +47,7 @@ class GroupRetrieveSerializer(InfoModelSerializer):
             'id',
             'name',
             'club',
+            'trainer',
             'pax',
             'created_at',
             'can_manage',
