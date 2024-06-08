@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from clubs.models import clubs, dicts, groups
+from clubs.models import clubs, dicts, groups, offers
 from practices.models.courts import GroupInfo
-from clubs.models import clubs, groups, dicts, offers
 
 
 #######################

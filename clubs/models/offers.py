@@ -8,7 +8,7 @@ User = get_user_model()
 
 class Offer(InfoMixin):
     club = models.ForeignKey(
-        'club', models.RESTRICT, 'offers',
+        'Club', models.RESTRICT, 'offers',
         verbose_name='Клуб',
     )
     org_accept = models.BooleanField(

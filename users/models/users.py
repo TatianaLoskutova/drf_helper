@@ -43,6 +43,6 @@ def post_save_user(sender, instance, created, **kwargs):
 
 
 # Adding properties to Group model
-# Group.add_to_class(
-#     'code', models.CharField('Code', max_length=32, null=True, unique=True)
-# )
+Group.add_to_class(
+    'code', models.CharField('Code', max_length=32, null=True, unique=True)
+)

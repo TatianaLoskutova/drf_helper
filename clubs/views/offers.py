@@ -37,7 +37,7 @@ class OfferClubView(ListCreateUpdateViewSet):
         OwnedByClub,
     )
     filterset_class = OfferOrgFilter
-    ordering_fields = ('created_at', 'updated_at',)
+    ordering_fields = ('-created_at', 'updated_at',)
 
     def get_queryset(self):
         qs = Offer.objects.select_related(
@@ -59,12 +59,10 @@ class OfferClubView(ListCreateUpdateViewSet):
 
 @extend_schema_view(
     list=extend_schema(summary='Список офферов пользователя', tags=['Теннисные клубы: Офферы']),
-    create=extend_schema(summary='Создать оофер в организацию', tags=['Теннисные клубы: Офферы']),
+    create=extend_schema(summary='Создать оффер в клуб', tags=['Теннисные клубы: Офферы']),
     partial_update=extend_schema(summary='Изменить оффер в клуб частично', tags=['Теннисные клубы: Офферы']),
 )
 class OfferUserView(ListCreateUpdateViewSet):
-    permission_classes = [IsOfferTrainer]
-
     queryset = Offer.objects.all()
     serializer_class = offers_s.OfferUserToOrgListSerializer
 

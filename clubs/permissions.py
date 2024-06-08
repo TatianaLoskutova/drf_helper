@@ -35,7 +35,7 @@ class IsMyGroup(BasePermission):
 
 class IsOfferTrainer(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if obj.organisation.director == request.user:
+        if obj.club.director == request.user:
             return True
 
         return False

@@ -4,15 +4,14 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from common.serializers.mixins import ExtendedModelSerializer, \
-    InfoModelSerializer
 from clubs.constants import PLAYER_POSITION
-from clubs.models.offers import Offer
 from clubs.models.clubs import Club
+from clubs.models.offers import Offer
 from clubs.serializers.nested.clubs import \
     ClubShortSerializer
+from common.serializers.mixins import ExtendedModelSerializer, \
+    InfoModelSerializer
 from users.serializers.nested.users import UserShortSerializer
-
 
 User = get_user_model()
 
@@ -55,7 +54,7 @@ class OfferOrgToUserCreateSerializer(ExtendedModelSerializer):
         attrs['club'] = club
         attrs['org_accept'] = True
 
-        # check offer create already
+        # check offer created already
         offers_exist = self.Meta.model.objects.filter(
             user__in=users,
             club=club,
@@ -69,9 +68,9 @@ class OfferOrgToUserCreateSerializer(ExtendedModelSerializer):
                 f'{user_error}'
             )
         # check user in org already
-        users_in_orgs = club.employees_info.filter(user__in=users)
+        users_in_orgs = club.players_info.filter(user__in=users)
         if users_in_orgs:
-            user_error = '\n'.join([employee.user.full_name for employee in users_in_orgs])
+            user_error = '\n'.join([player.user.full_name for player in users_in_orgs])
             raise ParseError(
                 f'Следующие пользователи уже в Вашем клубе:\n'
                 f'{user_error}'
@@ -97,9 +96,12 @@ class OfferOrgToUserUpdateSerializer(ExtendedModelSerializer):
             'accept',
         )
 
-    def validate(self, attrs):
-        attrs['org_accept'] = attrs.pop('accept')
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+        data['org_accept'] = data.pop('accept')
+        return data
 
+    def validate(self, attrs):
         # Offer from org to user
         if self.instance.is_from_org:
             if self.instance.user_accept is not None:
@@ -118,7 +120,7 @@ class OfferOrgToUserUpdateSerializer(ExtendedModelSerializer):
         with transaction.atomic():
             instance = super().update(instance, validated_data)
 
-            # Create employee
+            # Create player
             if instance.user_accept and instance.org_accept:
                 instance.club.players.add(
                     instance.user,
@@ -190,9 +192,12 @@ class OfferUserToOrgUpdateSerializer(ExtendedModelSerializer):
             'accept',
         )
 
-    def validate(self, attrs):
-        attrs['user_accept'] = attrs.pop('accept')
+    def to_internal_value(self, data):
+        data = super().to_internal_value(data)
+        data['user_accept'] = data.pop('accept')
+        return data
 
+    def validate(self, attrs):
         # Offer from user to org
         if self.instance.is_from_user:
             if self.instance.org_accept is not None:
@@ -211,7 +216,7 @@ class OfferUserToOrgUpdateSerializer(ExtendedModelSerializer):
         with transaction.atomic():
             instance = super().update(instance, validated_data)
 
-            # Create employee
+            # Create player
             if instance.user_accept and instance.org_accept:
                 instance.club.players.add(
                     instance.user,
