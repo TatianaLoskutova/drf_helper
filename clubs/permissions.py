@@ -23,6 +23,19 @@ class IsColleagues(IsAuthenticated):
         return False
 
 
+class IsMembers(IsAuthenticated):
+    def has_object_permission(self, request, view, obj):
+        if (
+            obj.group.club.director == request.user
+            or obj.group.trainer.user == request.user
+        ):
+            return True
+
+        if request.method in SAFE_METHODS:
+            return request.user in obj.group.club.players.all()
+        return False
+
+
 class IsMyGroup(IsAuthenticated):
     def has_object_permission(self, request, view, obj):
         if obj.club.director == request.user:

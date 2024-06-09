@@ -8,6 +8,12 @@ class OwnedByClub(BaseFilterBackend):
         return queryset.filter(club_id=org_id)
 
 
+class OwnedByGroup(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        group_id = request.parser_context['kwargs'].get('pk')
+        return queryset.filter(group_id=group_id)
+
+
 class MyClub(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         user = request.user

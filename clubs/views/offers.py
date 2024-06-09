@@ -1,14 +1,14 @@
-from django.db.models import Case, Q, When
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.filters import OrderingFilter
 
 from clubs.backends import OwnedByClub
+from clubs.factory.offers import OfferFactory
 from clubs.filters import OfferOrgFilter, OfferUserFilter
 from clubs.models.offers import Offer
 from clubs.permissions import IsOfferTrainer
 from clubs.serializers.api import offers as offers_s
-from common.views.mixins import ListCreateUpdateViewSet
+from common.views.mixins import LCUViewSet
 
 
 @extend_schema_view(
@@ -16,7 +16,7 @@ from common.views.mixins import ListCreateUpdateViewSet
     create=extend_schema(summary='Создать ооферы пользователям', tags=['Теннисные клубы: Офферы']),
     partial_update=extend_schema(summary='Изменить оффер пользователя частично', tags=['Теннисные клубы: Офферы']),
 )
-class OfferClubView(ListCreateUpdateViewSet):
+class OfferClubView(LCUViewSet):
     permission_classes = [IsOfferTrainer]
 
     queryset = Offer.objects.all()
@@ -40,21 +40,7 @@ class OfferClubView(ListCreateUpdateViewSet):
     ordering_fields = ('-created_at', 'updated_at',)
 
     def get_queryset(self):
-        qs = Offer.objects.select_related(
-            'user',
-        ).prefetch_related(
-            'club',
-        ).annotate(
-            can_accept=Case(
-                When(Q(user_accept__isnull=True, org_accept=False), then=True,),
-                default=False,
-            ),
-            can_reject=Case(
-                When(Q(user_accept__isnull=True, org_accept=True), then=True,),
-                default=False,
-            ),
-        )
-        return qs
+        return OfferFactory().club_list()
 
 
 @extend_schema_view(
@@ -62,7 +48,7 @@ class OfferClubView(ListCreateUpdateViewSet):
     create=extend_schema(summary='Создать оффер в клуб', tags=['Теннисные клубы: Офферы']),
     partial_update=extend_schema(summary='Изменить оффер в клуб частично', tags=['Теннисные клубы: Офферы']),
 )
-class OfferUserView(ListCreateUpdateViewSet):
+class OfferUserView(LCUViewSet):
     queryset = Offer.objects.all()
     serializer_class = offers_s.OfferUserToOrgListSerializer
 
@@ -82,20 +68,4 @@ class OfferUserView(ListCreateUpdateViewSet):
     ordering_fields = ('created_at', 'updated_at',)
 
     def get_queryset(self):
-        qs = Offer.objects.select_related(
-            'user',
-        ).prefetch_related(
-            'club',
-        ).filter(
-            user=self.request.user,
-        ).annotate(
-            can_accept=Case(
-                When(Q(org_accept__isnull=True, user_accept=False), then=True,),
-                default=False,
-            ),
-            can_reject=Case(
-                When(Q(org_accept__isnull=True, user_accept=True), then=True,),
-                default=False,
-            ),
-        )
-        return qs
+        return OfferFactory().user_list()

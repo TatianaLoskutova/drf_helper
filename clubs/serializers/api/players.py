@@ -4,7 +4,7 @@ from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
 
-from clubs.constants import PLAYER_POSITION
+from clubs.constants import PLAYER_POSITION, TRAINER_POSITION, DIRECTOR_POSITION
 from clubs.models.clubs import Club, Player
 from clubs.models.dicts import Position
 from clubs.serializers.nested.dicts import PositionShortSerializer

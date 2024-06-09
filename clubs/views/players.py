@@ -8,9 +8,7 @@ from clubs.filters import PlayerFilter
 from clubs.models.clubs import Player
 from clubs.permissions import IsColleagues
 from clubs.serializers.api import players as players_s
-from common.views.mixins import CRUDViewSet
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
+from common.views.mixins import LCRUDViewSet, ListViewSet
 
 
 @extend_schema_view(
@@ -22,7 +20,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
     destroy=extend_schema(summary='Удалить игрока из клуба', tags=['Теннисные клубы: Игроки']),
     search=extend_schema(filters=True, summary='Список игроков клуба Search',tags=['Словари']),
 )
-class PlayerView(CRUDViewSet):
+class PlayerView(LCRUDViewSet):
     permission_classes = [IsColleagues]
     queryset = Player.objects.all()
     serializer_class = players_s.PlayerListSerializer

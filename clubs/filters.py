@@ -3,7 +3,7 @@ from django.db.models import Q, F
 from clubs.models.clubs import Club, Player
 from clubs.models.groups import Group
 from clubs.models.offers import Offer
-
+from clubs.constants import DIRECTOR_POSITION, TRAINER_POSITION
 
 class ClubFilter(django_filters.FilterSet):
     can_manage = django_filters.BooleanFilter('can_manage', label='Can manage')
@@ -17,18 +17,25 @@ class PlayerFilter(django_filters.FilterSet):
     only_corporate = django_filters.BooleanFilter(
         'user__is_corporate_account', label='Is corporate account'
     )
+    can_be_group_trainer = django_filters.BooleanFilter(
+        method='can_be_group_trainer_filter', label='Can be group trainer'
+    )
 
     class Meta:
         model = Player
         fields = ('only_corporate',)
 
+    def can_be_group_trainer_filter(self, queryset, name, value):
+        return queryset.filter(position_id__in=[DIRECTOR_POSITION, TRAINER_POSITION])
+
 
 class GroupFilter(django_filters.FilterSet):
     is_member = django_filters.BooleanFilter('is_member',)
+    can_manage = django_filters.BooleanFilter('can_manage', )
 
     class Meta:
         model = Group
-        fields = ('club', 'trainer', 'is_member')
+        fields = ('club', 'trainer',)
 
 
 class OfferOrgFilter(django_filters.FilterSet):
@@ -70,9 +77,9 @@ class OfferOrgFilter(django_filters.FilterSet):
 
     def decision_filter(self, queryset, name, value):
         offer_type = self.data.get('type')
-        if offer_type not in ['sent', 'received']:
+        if offer_type not in ('sent', 'received'):
             return queryset
-        if value not in ['accept', 'reject', 'unknown']:
+        if value not in ('accept', 'reject', 'unknown'):
             return queryset
 
         sent_type = bool(offer_type == 'sent')

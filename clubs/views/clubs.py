@@ -8,7 +8,7 @@ from clubs.filters import ClubFilter
 from clubs.models.clubs import Club
 from clubs.permissions import IsMyClub
 from clubs.serializers.api import clubs
-from common.views.mixins import CRUViewSet, ListViewSet
+from common.views.mixins import LCRUViewSet, ListViewSet
 
 
 @extend_schema_view(
@@ -26,7 +26,7 @@ class ClubSearchView(ListViewSet):
     update=extend_schema(summary='Изменить клуб', tags=['Теннисные клубы']),
     partial_update=extend_schema(summary='Частично изменить клуб', tags=['Теннисные клубы']),
 )
-class ClubView(CRUViewSet):
+class ClubView(LCRUViewSet):
     permission_classes = [IsMyClub]
     queryset = Club.objects.all()
     serializer_class = clubs.ClubListSerializer

@@ -6,16 +6,16 @@ from rest_framework.exceptions import ParseError
 from clubs.models.clubs import Club
 from clubs.models.groups import Group
 from clubs.serializers.nested.clubs import ClubShortSerializer
+from clubs.serializers.nested.players import PlayerShortSerializer
 from common.serializers.mixins import ExtendedModelSerializer, \
     InfoModelSerializer
-from users.serializers.nested.users import UserShortSerializer
 
 User = get_user_model()
 
 
 class GroupListSerializer(InfoModelSerializer):
     club = ClubShortSerializer()
-    trainer = UserShortSerializer()
+    trainer = PlayerShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()
@@ -36,7 +36,7 @@ class GroupListSerializer(InfoModelSerializer):
 
 class GroupRetrieveSerializer(InfoModelSerializer):
     club = ClubShortSerializer()
-    trainer = UserShortSerializer()
+    trainer = PlayerShortSerializer()
     pax = serializers.IntegerField()
     can_manage = serializers.BooleanField()
     is_member = serializers.BooleanField()

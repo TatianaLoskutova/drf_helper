@@ -8,7 +8,7 @@ from clubs.filters import GroupFilter
 from clubs.models.groups import Group
 from clubs.permissions import IsColleagues, IsMyGroup
 from clubs.serializers.api import groups as groups_s
-from common.views.mixins import CRUViewSet
+from common.views.mixins import LCRUViewSet
 
 
 @extend_schema_view(
@@ -18,7 +18,7 @@ from common.views.mixins import CRUViewSet
     update=extend_schema(summary='Изменить группу', tags=['Теннисные клубы: Группы']),
     partial_update=extend_schema(summary='Изменить группу частично', tags=['Теннисные клубы: Группы']),
 )
-class GroupView(CRUViewSet):
+class GroupView(LCRUViewSet):
     permission_classes = [IsMyGroup]
 
     queryset = Group.objects.all()

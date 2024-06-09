@@ -9,7 +9,7 @@ from practices.models.courts import GroupInfo
 #######################
 class PlayerInline(admin.TabularInline):
     model = clubs.Player
-    fields = ('player', 'position', 'date_joined')
+    fields = ('user', 'position', 'date_joined')
 
 
 class OfferInline(admin.TabularInline):
