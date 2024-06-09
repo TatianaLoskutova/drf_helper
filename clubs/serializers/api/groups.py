@@ -3,13 +3,14 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
-from practices.serializers.nested.courts import TrainingSettingsSerializer
+
 from clubs.models.clubs import Club
 from clubs.models.groups import Group
 from clubs.serializers.nested.clubs import ClubShortSerializer
 from clubs.serializers.nested.players import PlayerShortSerializer
 from common.serializers.mixins import ExtendedModelSerializer, \
     InfoModelSerializer
+from practices.serializers.nested.courts import TrainingSettingsSerializer
 
 User = get_user_model()
 
@@ -36,6 +37,7 @@ class GroupListSerializer(InfoModelSerializer):
 
 
 class GroupRetrieveSerializer(InfoModelSerializer):
+    trainings_info = TrainingSettingsSerializer(allow_null=True)
     club = ClubShortSerializer()
     trainer = PlayerShortSerializer()
     pax = serializers.IntegerField()
@@ -46,6 +48,7 @@ class GroupRetrieveSerializer(InfoModelSerializer):
         model = Group
         fields = (
             'id',
+            'trainings_info',
             'name',
             'club',
             'trainer',

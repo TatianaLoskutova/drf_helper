@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-
+from clubs.trainers.groups import GroupTrainer
 from common.models.mixins import InfoMixin
 
 User = get_user_model()
@@ -21,6 +21,8 @@ class Group(InfoMixin):
         'Player', 'groups_members', verbose_name='Игроки групп',
         blank=True, through='Member',
     )
+
+    objects = GroupTrainer()
 
     class Meta:
         verbose_name = 'Группа'
