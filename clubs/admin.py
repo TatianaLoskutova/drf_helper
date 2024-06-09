@@ -56,8 +56,8 @@ class GroupAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name',)
     search_fields = ('name',)
     inlines = (
-        MemberInline,
         ProfileTrainingInline,
+        MemberInline,
     )
     readonly_fields = (
         'created_at', 'created_by', 'updated_at', 'updated_by',

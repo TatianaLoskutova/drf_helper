@@ -9,9 +9,9 @@ from practices.models import courts, dicts, trainings
 #######################
 # INLINES
 #######################
-class CourtPlayerInline(TabularInline):
-    model = courts.CourtPlayer
-    fields = ('player', 'status')
+class CourtMemberInline(TabularInline):
+    model = courts.CourtMember
+    fields = ('member', 'status')
 
 
 #######################
@@ -34,7 +34,7 @@ class CourtAdmin(admin.ModelAdmin):
         'training_max_duration',
     )
     inlines = (
-        CourtPlayerInline,
+        CourtMemberInline,
     )
 
 

@@ -1,9 +1,8 @@
-import pdb
-
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from practices.constants import TRAINING_CREATED_DEFAULT, TRAINING_CREATED_STATUS
+from practices.constants import TRAINING_CREATED_DEFAULT, \
+    TRAINING_CREATED_STATUS
 from practices.models.dicts import TrainingStatus
 
 User = get_user_model()
@@ -17,6 +16,9 @@ class Training(models.Model):
     player = models.ForeignKey(
         User, models.CASCADE, 'trainings',
         verbose_name='Игрок',
+    )
+    member = models.ForeignKey(
+        'clubs.Member', models.CASCADE, 'trainings', verbose_name='Участник группы',
     )
     training_start = models.TimeField('Начало тренировки', blank=True, null=True,)
     training_end = models.TimeField('Окончание тренировки', blank=True, null=True,)

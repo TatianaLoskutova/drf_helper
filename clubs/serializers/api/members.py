@@ -75,11 +75,11 @@ class MemberCreateSerializer(ExtendedModelSerializer):
         players = attrs['players']
         players_id_set = {obj.pk for obj in players}
 
-        org_players = club.employees_info.all()
-        org_players_id_set = {obj.pk for obj in org_players}
+        club_players = club.employees_info.all()
+        club_players_id_set = {obj.pk for obj in club_players}
 
-        # Check employees from request exist in org
-        if players_id_set - org_players_id_set:
+        # Check players from request exist in club
+        if players_id_set - club_players_id_set:
             raise ParseError(
                 'Некоторые из указанных игроков не существуют в клубе. '
                 'Проверьте введенные данные.'

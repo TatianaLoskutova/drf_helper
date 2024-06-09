@@ -19,7 +19,7 @@ class MyClub(BaseFilterBackend):
         user = request.user
         return queryset.filter(
             Q(director=user) | Q(players=user)
-        )
+        ).distinct()
 
 
 class MyGroup(BaseFilterBackend):
@@ -27,4 +27,4 @@ class MyGroup(BaseFilterBackend):
         user = request.user
         return queryset.filter(
             Q(club__director=user) | Q(club__players=user)
-        )
+        ).distinct()

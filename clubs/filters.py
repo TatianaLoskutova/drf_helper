@@ -5,6 +5,7 @@ from clubs.models.groups import Group
 from clubs.models.offers import Offer
 from clubs.constants import DIRECTOR_POSITION, TRAINER_POSITION
 
+
 class ClubFilter(django_filters.FilterSet):
     can_manage = django_filters.BooleanFilter('can_manage', label='Can manage')
 

@@ -1,8 +1,9 @@
 from crum import get_current_user
 from django.contrib.auth import get_user_model
+from django.db import transaction
 from rest_framework import serializers
 from rest_framework.exceptions import ParseError
-
+from practices.serializers.nested.courts import TrainingSettingsSerializer
 from clubs.models.clubs import Club
 from clubs.models.groups import Group
 from clubs.serializers.nested.clubs import ClubShortSerializer
@@ -114,3 +115,29 @@ class GroupUpdateSerializer(ExtendedModelSerializer):
                 'Группа с таким названием уже существует.'
             )
         return attrs
+
+
+class GroupSettingsUpdateSerializer(ExtendedModelSerializer):
+    trainings_info = TrainingSettingsSerializer()
+
+    class Meta:
+        model = Group
+        fields = (
+            'id',
+            'trainings_info',
+        )
+
+    def update(self, instance, validated_data):
+        with transaction.atomic():
+            for key, value in validated_data.items():
+                self._update_group_profile(key, value)
+        return instance
+
+    def _update_group_profile(self, param, validated_data):
+        if param in self.fields:
+            serializer = self.fields[param]
+            instance, c = serializer.Meta.model.objects.get_or_create(
+                group_id=self.get_from_url('pk')
+            )
+            serializer.update(instance, validated_data)
+        return

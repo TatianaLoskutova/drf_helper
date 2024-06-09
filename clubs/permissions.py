@@ -44,6 +44,9 @@ class IsMyGroup(IsAuthenticated):
         if request.method in SAFE_METHODS:
             return request.user in obj.club.players.all()
 
+        if obj.trainer.user == request.user:
+            return True
+
         return False
 
 

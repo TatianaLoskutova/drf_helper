@@ -10,10 +10,10 @@ from common.views.mixins import LCDViewSet
 
 @extend_schema_view(
     list=extend_schema(summary='Список участников группы', tags=['Теннисные клубы: Группы: Участники']),
-    retrieve=extend_schema(summary='Деталка участника группы', tags=['Теннисные клубы: Группы: Участники']),
+    # retrieve=extend_schema(summary='Деталка участника группы', tags=['Теннисные клубы: Группы: Участники']),
     create=extend_schema(summary='Создать участника группы', tags=['Теннисные клубы: Группы: Участники']),
-    destroy=extend_schema(summary='Удалить игрока из клуба', tags=['Теннисные клубы: Группы: Участники']),
-    search=extend_schema(filters=True, summary='Список игроков клуба Search', tags=['Словари']),
+    destroy=extend_schema(summary='Удалить участника из группы', tags=['Теннисные клубы: Группы: Участники']),
+    search=extend_schema(filters=True, summary='Список участников группы Search', tags=['Словари']),
 )
 class MemberView(LCDViewSet):
     permission_classes = [IsColleagues]
@@ -23,7 +23,7 @@ class MemberView(LCDViewSet):
 
     multi_serializer_class = {
         'list': members_s.MemberListSerializer,
-        'retrieve': members_s.MemberRetrieveSerializer,
+        # 'retrieve': members_s.MemberRetrieveSerializer,
         'create': members_s.MemberCreateSerializer,
         'search': members_s.MemberSearchSerializer,
     }

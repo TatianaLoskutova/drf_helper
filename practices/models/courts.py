@@ -1,21 +1,23 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from common.models.mixins import InfoMixin
+
 User = get_user_model()
 
 
 class GroupInfo(models.Model):
     group = models.OneToOneField(
-        'clubs.Group', models.CASCADE,
-        verbose_name='Корт', primary_key=True,
+        'clubs.Group', models.CASCADE, related_name='trainings_info',
+        verbose_name='Группа', primary_key=True,
     )
     min_active_players = models.PositiveSmallIntegerField(
-        'Минимальное количество активных игроков', blank=True, null=True,
+        'Мин. число активных игроков', blank=True, null=True,
     )
     training_start = models.TimeField('Начало тренировки', blank=True, null=True,)
     training_end = models.TimeField('Окончание тренировки', blank=True, null=True,)
     training_max_duration = models.PositiveSmallIntegerField(
-        'Максимальная длительность тренировки', blank=True, null=True,
+        'Макс. длительность тренировки', blank=True, null=True,
     )
 
     class Meta:
@@ -26,7 +28,7 @@ class GroupInfo(models.Model):
         return f'{self.group}'
 
 
-class Court(models.Model):
+class Court(InfoMixin):
     group = models.ForeignKey(
         'practices.GroupInfo', models.CASCADE, 'courts',
         verbose_name='Группа',
@@ -35,7 +37,14 @@ class Court(models.Model):
     training_start = models.TimeField('Начало тренировки', blank=True, null=True,)
     training_end = models.TimeField('Окончание тренировки', blank=True, null=True,)
     training_max_duration = models.PositiveSmallIntegerField(
-        'Максимальная длительность тренировки', blank=True, null=True,
+        'Макс. длительность тренировки', blank=True, null=True,
+    )
+    min_active = models.PositiveSmallIntegerField(
+        'Мин. число активных игроков', null=True, blank=True,
+    )
+    members = models.ManyToManyField(
+        'clubs.Member', related_name='courts',
+        verbose_name='Участники смены', through='CourtMember'
     )
 
     class Meta:
@@ -47,23 +56,23 @@ class Court(models.Model):
         return f'Корт №{self.pk} для {self.group})'
 
 
-class CourtPlayer(models.Model):
-    player = models.ForeignKey(
-        User, models.CASCADE, 'courts',
-        verbose_name='Игрок',
+class CourtMember(models.Model):
+    member = models.ForeignKey(
+        'clubs.Member', models.CASCADE, 'courts_info',
+        verbose_name='Участник',
     )
-    cort = models.ForeignKey(
-        'practices.Court', models.CASCADE, 'players',
+    court = models.ForeignKey(
+        'practices.Court', models.CASCADE, 'members_info',
         verbose_name='Корт',
     )
     status = models.ForeignKey(
-        'practices.CourtStatus', models.RESTRICT, 'court_players',
+        'practices.CourtStatus', models.RESTRICT, 'members',
         verbose_name='Статус корта',
     )
 
     class Meta:
-        verbose_name = 'Корт - Игрок'
-        verbose_name_plural = 'Корты - Игроки'
+        verbose_name = 'Корт - участник группы'
+        verbose_name_plural = 'Корты - участники группы'
 
     def __str__(self):
-        return f'Корт {self.cort} для {self.player})'
+        return f'Участник корта {self.member.player.user} ({self.pk})'
