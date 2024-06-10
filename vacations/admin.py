@@ -46,7 +46,7 @@ class VacationAdmin(admin.ModelAdmin):
     list_filter = ('status',)
     radio_fields = {'status': admin.VERTICAL}
 
-    def court_link(self, obj):
+    def watch_link(self, obj):
         link = reverse(
             'admin:vacations_watch_change', args=[obj.watch.id],
         )

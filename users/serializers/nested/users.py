@@ -12,7 +12,7 @@ class UserShortSerializer(serializers.ModelSerializer):
         )
 
 
-class UserPlayerSerializer(serializers.ModelSerializer):
+class UserEmployeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
