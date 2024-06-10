@@ -25,7 +25,7 @@ class GroupInfo(models.Model):
         verbose_name_plural = 'Параметры тренировочных групп'
 
     def __str__(self):
-        return f'{self.group}'
+        return f'Training Info'
 
 
 class Court(InfoMixin):
