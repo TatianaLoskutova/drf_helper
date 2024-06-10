@@ -38,8 +38,8 @@ INSTALLED_APPS += [
     'api',
     'common',
     'users',
-    'practices',
-    'clubs',
+    'vacations',
+    'organizations',
 ]
 
 # after apps

@@ -88,28 +88,29 @@ class DictListMixin(ListViewSet):
         return self.model.objects.filter(is_active=True)
 
 
-class LCRUViewSet(ExtendedGenericViewSet,
-                 mixins.CreateModelMixin,
-                 mixins.RetrieveModelMixin,
-                 mixins.UpdateModelMixin,
-                 mixins.ListModelMixin,):
+class LCRUViewSet(
+    ExtendedGenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin, mixins.ListModelMixin,
+):
     pass
 
 
-class LCRUDViewSet(LCRUViewSet,
-                  mixins.DestroyModelMixin,):
+class LCRUDViewSet(
+    LCRUViewSet,
+    mixins.DestroyModelMixin,
+):
     pass
 
 
-class LCUViewSet(ExtendedGenericViewSet,
-                 mixins.ListModelMixin,
-                 mixins.CreateModelMixin,
-                 mixins.UpdateModelMixin, ):
+class LCUViewSet(
+    ExtendedGenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+):
     pass
 
 
-class LCDViewSet(ExtendedGenericViewSet,
-                 mixins.ListModelMixin,
-                 mixins.CreateModelMixin,
-                 mixins.DestroyModelMixin, ):
+class LCDViewSet(
+    ExtendedGenericViewSet, mixins.ListModelMixin, mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+):
     pass
