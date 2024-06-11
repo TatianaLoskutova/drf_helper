@@ -96,12 +96,8 @@ class OfferOrgToUserUpdateSerializer(ExtendedModelSerializer):
             'accept',
         )
 
-    def to_internal_value(self, data):
-        data = super().to_internal_value(data)
-        data['org_accept'] = data.pop('accept')
-        return data
-
     def validate(self, attrs):
+        attrs['org_accept'] = attrs.pop('accept')
         # Offer from org to user
         if self.instance.is_from_org:
             if self.instance.user_accept is not None:
@@ -192,12 +188,8 @@ class OfferUserToOrgUpdateSerializer(ExtendedModelSerializer):
             'accept',
         )
 
-    def to_internal_value(self, data):
-        data = super().to_internal_value(data)
-        data['user_accept'] = data.pop('accept')
-        return data
-
     def validate(self, attrs):
+        attrs['user_accept'] = attrs.pop('accept')
         # Offer from user to org
         if self.instance.is_from_user:
             if self.instance.org_accept is not None:

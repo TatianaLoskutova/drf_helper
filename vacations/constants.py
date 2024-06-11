@@ -18,6 +18,6 @@ VACATION_ALL_STATUSES = [
 
 VACATION_CREATED_DEFAULT = {
     'name': 'Создано',
-    'is_booked': True,
+    'is_active': True,
     'sort': 100,
 }

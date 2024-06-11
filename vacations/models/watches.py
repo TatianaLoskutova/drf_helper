@@ -21,8 +21,8 @@ class DepartmentInfo(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Параметр отдела'
-        verbose_name_plural = 'Параметры отделов'
+        verbose_name = 'Параметр отпуска'
+        verbose_name_plural = 'Параметры отпусков'
 
     def __str__(self):
         return f'vacation Info'
@@ -31,10 +31,9 @@ class DepartmentInfo(models.Model):
 class Watch(InfoMixin):
     department = models.ForeignKey(
         'vacations.DepartmentInfo', models.CASCADE, 'watches',
-        verbose_name='Группа',
+        verbose_name='Отдел',
     )
-    # todo  дату надо понять как назвать
-    date = models.DateField('Дата xxx')
+    date = models.DateField('Дата смены')
     vacation_start = models.TimeField('Начало отпуска', blank=True, null=True,)
     vacation_end = models.TimeField('Окончание отпуска', blank=True, null=True,)
     vacation_max_duration = models.PositiveSmallIntegerField(

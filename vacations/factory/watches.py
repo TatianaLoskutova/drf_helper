@@ -1,3 +1,5 @@
+import pdb
+
 from django.db.models import Count, Q
 
 from vacations import constants
@@ -13,9 +15,9 @@ class WatchFactory:
         annotates_stats = dict()
         for status in all_statuses:
             annotates_stats[f'{status}_pax'] = Count(
-                'vacations', distinct=True, filter=Q(vacations__status_id=status),
+                'vacations', distinct=True,
+                filter=Q(vacations__status_id=status),
             )
-
         qs = self.model.objects.prefetch_related(
             'department',
             'department__department__chief',

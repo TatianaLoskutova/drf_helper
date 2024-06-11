@@ -141,7 +141,7 @@ class DepartmentSettingsUpdateSerializer(ExtendedModelSerializer):
         if param in self.fields:
             serializer = self.fields[param]
             instance, c = serializer.Meta.model.objects.get_or_create(
-                group_id=self.get_from_url('pk')
+                department_id=self.get_from_url('pk')
             )
             serializer.update(instance, validated_data)
         return

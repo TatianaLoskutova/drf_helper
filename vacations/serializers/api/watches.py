@@ -6,8 +6,8 @@ from rest_framework.exceptions import ParseError
 
 from organizations.models.departments import Department, Member
 from organizations.serializers.nested.departments import DepartmentShortSerializer
-from common.serializers.mixins import InfoModelSerializer
-from vacations.models.watches import Watch, DepartmentInfo
+from common.serializers.mixins import InfoModelSerializer, DictMixinSerializer
+from vacations.models.watches import Watch, DepartmentInfo, WatchMember
 from vacations.serializers.internal.watches import WatchStatsSerializer
 
 User = get_user_model()
@@ -100,7 +100,9 @@ class WatchCreateSerializer(InfoModelSerializer):
                 members = validated_data.pop('members')
             instance = super().create(validated_data)
 
-            instance.members.set(members)
+            instance.members.set(
+                members, through_defaults={'status_id': 'created'}
+            )
 
             if remember_data:
                 defaults = {
@@ -222,7 +224,9 @@ class WatchUpdateSerializer(InfoModelSerializer):
             instance = super().update(instance, validated_data)
 
             if members:
-                instance.members.set(members)
+                instance.members.set(
+                    members, through_defaults={'status_id': 'created'}
+                )
 
             if remember_data:
                 defaults = {
@@ -252,17 +256,19 @@ class WatchUpdateSerializer(InfoModelSerializer):
 
     def validate(self, attrs):
         # Check times
-        if attrs.get('vacation_start') and attrs.get('vacation_end'):
-            if attrs.get('vacation_start') >= attrs.get('vacation_end'):
+        if attrs.get('vacation_start') or attrs.get('vacation_end'):
+            vacation_start = attrs.get('vacation_start') or self.instance.vacation_start
+            vacation_end = attrs.get('break_end') or self.instance.vacation_end
+            if vacation_start >= vacation_end:
                 raise ParseError(
                     'Время начала отпуска должно быть меньше времени окончания.'
                 )
         # Check duplicates
         if attrs.get('date') and self.Meta.model.objects.filter(
                 department_id=self.instance.department.pk, date=attrs['date']
-        ).exists():
+        ).exclude(pk=self.instance.pk).exists():
             raise ParseError(
-                'На этот день уже корт забронирован.'
+                'На этот день уже существует активная смена.'
             )
         return attrs
 
@@ -287,3 +293,24 @@ class WatchUpdateSerializer(InfoModelSerializer):
                 'Время окончания отпуска должно быть кратно 15 минутам.'
             )
         return value
+
+
+class WatchMemberListSerializer(InfoModelSerializer):
+    status = DictMixinSerializer()
+
+    class Meta:
+        model = Watch
+        fields = (
+            'id',
+            'status',
+        )
+
+
+class WatchMemberUpdateSerializer(InfoModelSerializer):
+
+    class Meta:
+        model = Watch
+        fields = (
+            'id',
+            'status',
+        )

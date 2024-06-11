@@ -139,5 +139,5 @@ class UserSearchListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User  # тут под вопросом
         fields = (
-            'id', 'username', 'full_name',
+            'id', 'username', 'email', 'full_name',
         )

@@ -15,5 +15,10 @@ router.register(
 )
 
 urlpatterns = [
+    path(
+        'breaks/replacements/<int:pk>/member/',
+        watches.MeWatchMemberView.as_view(),
+        name='watches-member',
+    ),
     path('vacations/', include(router.urls)),
 ]
